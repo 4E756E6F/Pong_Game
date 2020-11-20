@@ -9,11 +9,21 @@ class Ball:
         self.posX = posX
         self.posY = posY
         self.radius = radius
+        self.bx = 0
+        self.by = 0
         self.draw_ball()
 
     def draw_ball(self):
         pygame.draw.circle(self.screen, self.color,
                            (self.posX, self.posY), self.radius)
+
+    def start_moving(self):
+        self.bx = 15
+        self.by = 5
+
+    def movement(self):
+        self.posX += self.bx
+        self.posY += self.by
 
 
 class Player:
@@ -35,8 +45,8 @@ class Player:
 pygame.init()
 
 # ? CONSTANTS
-WIDTH = 1280
-HEIGHT = 960
+WIDTH = 900
+HEIGHT = 780
 BACKGROUND_COLOR = (32, 32, 32)
 WHITE = (224, 224, 224)
 
@@ -56,10 +66,23 @@ ball = Ball(screen, WHITE, WIDTH//2, HEIGHT//2, 15)
 player_left = Player(screen, WHITE, 15, HEIGHT//2-60, 20, 120)
 player_right = Player(screen, WHITE, WIDTH-20-15, HEIGHT//2-60, 20, 120)
 
+# ? VARIABLES
+playing = False
+
 # ? MAIN LOOP
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
+
+        if event.type == pygame.KEYDOWN:
+            if event.type == pygame.K_KP_ENTER:
+                ball.start_moving()
+                playing = True
+
+    if playing:
+        # * BALL MOVEMENT
+        ball.movement()
+        ball.draw_ball()
 
     pygame.display.update()
